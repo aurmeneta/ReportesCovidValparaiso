@@ -15,8 +15,8 @@ def juntar_csvs():
     for file_path in file_paths:
         file_base = path.basename(file_path)
         # Ignorar archivos "Casos Diarios.csv"
-        if ((file_base == "Casos Diarios.csv")
-                or (file_base == "Casos Diarios_T.csv")):
+        if ((file_base == "casos-diarios.csv")
+                or (file_base == "casos-diarios_T.csv")):
             continue
         
         file_name = path.splitext(file_base)[0]
