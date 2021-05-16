@@ -23,4 +23,4 @@ jobs:
           pip install beautifulsoup4 tabula-py pandas
       
       - name: Run Script
-        run: python3 --version
+        run: python3 ./src/main.py
