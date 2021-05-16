@@ -24,3 +24,6 @@ jobs:
       
       - name: Run Script
         run: python3 ./src/main.py
+        
+      - name: Commit changes
+        run: git status
