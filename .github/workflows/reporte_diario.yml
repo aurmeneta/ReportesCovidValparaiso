@@ -26,4 +26,7 @@ jobs:
         run: python3 ./src/main.py
         
       - name: Commit changes
-        run: git status
+        run: |
+          git add .
+          git commit -m "informacion desde reporte diario"
+          git push
