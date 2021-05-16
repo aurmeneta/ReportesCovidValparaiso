@@ -1,6 +1,7 @@
 import glob
 import pandas as pd
 from util import COMUNAS
+from os import path
 
 CSV_FILE_PATH = "./Casos Nuevos/*.csv"
 
@@ -12,12 +13,13 @@ def juntar_csvs():
     casos_nuevos_diarios = pd.DataFrame(columns=COMUNAS)
 
     for file_path in file_paths:
+        file_base = path.basename(file_path)
         # Ignorar archivos "Casos Diarios.csv"
-        if ((file_path == "./Casos Nuevos/Casos Diarios.csv")
-                or (file_path == "./Casos Nuevos/Casos Diarios_T.csv")):
+        if ((file_base == "Casos Diarios.csv")
+                or (file_base == "Casos Diarios_T.csv")):
             continue
-
-        file_name = file_path.split("/")[2].split(".")[0]
+        
+        file_name = path.splitext(file_base)[0]
         # Abrir archivo csv
         reporte_dia = pd.read_csv(file_path)
         reporte_dia = reporte_dia.rename(columns={"Casos nuevos": file_name})
@@ -28,4 +30,4 @@ def juntar_csvs():
     casos_nuevos_diarios = casos_nuevos_diarios.sort_index()
 
     casos_nuevos_diarios.T.to_csv("./Casos Nuevos/casos-diarios.csv")
-    casos_nuevos_diarios.to_csv("./Casos Nuevos/casos-diarios.csv")
+    casos_nuevos_diarios.to_csv("./Casos Nuevos/casos-diarios_T.csv")
