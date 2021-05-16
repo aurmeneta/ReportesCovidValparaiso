@@ -6,7 +6,7 @@ on:
 
 jobs:
   reporte_diario:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     name: Obtener reporte diario
 
     steps:
