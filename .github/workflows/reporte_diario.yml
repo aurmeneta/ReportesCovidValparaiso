@@ -1,7 +1,7 @@
 name: Obtener reporte diario
 on:
   schedule:
-  - cron: "*/2 * * * *"
+  - cron: "*/5 * * * *"
 
 jobs:
   reporte_diario:
