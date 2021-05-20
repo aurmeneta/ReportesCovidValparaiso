@@ -3,7 +3,7 @@ import pandas as pd
 from util import COMUNAS
 from os import path
 
-CSV_FILE_PATH = "./Casos Nuevos/*.csv"
+CSV_FILE_PATH = "./casos-nuevos/*.csv"
 
 def juntar_csvs():
     print("Juntanto archivos csv...")
@@ -29,5 +29,5 @@ def juntar_csvs():
 
     casos_nuevos_diarios = casos_nuevos_diarios.sort_index()
 
-    casos_nuevos_diarios.T.to_csv("./Casos Nuevos/casos-diarios.csv")
-    casos_nuevos_diarios.to_csv("./Casos Nuevos/casos-diarios_T.csv")
+    casos_nuevos_diarios.T.to_csv("./casos-nuevos/casos-diarios.csv")
+    casos_nuevos_diarios.to_csv("./casos-nuevos/casos-diarios_T.csv")

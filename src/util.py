@@ -78,7 +78,7 @@ class Reporte:
     def __init__ (self, date, link):
         self.date = date
         self.link = link
-        self.csv_path = f"./Casos Nuevos/{date}.csv"
+        self.csv_path = f"./casos-nuevos/{date}.csv"
         self.pdf_path = f"./{date}.pdf"
 
     def __str__ (self):
