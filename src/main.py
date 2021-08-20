@@ -3,6 +3,7 @@ from juntar_csvs import juntar_csvs
 from obtener_reportes_disponibles import obtener_reportes_disponibles
 from os import path
 
+
 def filtrar_reportes(reportes):
     reportes_nuevos = []
 
@@ -14,7 +15,6 @@ def filtrar_reportes(reportes):
             reportes_nuevos.append(reporte)
 
     return reportes_nuevos
-        
 
 
 if __name__ == "__main__":
@@ -32,4 +32,3 @@ if __name__ == "__main__":
 
     else:
         print("Nada nuevo que revisar!")
-

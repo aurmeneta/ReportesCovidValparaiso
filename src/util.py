@@ -59,6 +59,7 @@ COMUNAS = sorted([
 def string_to_month(string):
     return MONTHS.index(string.lower()) + 1
 
+
 def string_to_datetime(string):
     parts = string.split(" ")
 
@@ -70,16 +71,18 @@ def string_to_datetime(string):
             month = string_to_month(parts[2])
             year = int(parts[3])
             return datetime.date(year, month, day)
-    except:
+    except Exception as e:
+        print("Error convirtiendo string a date:", string)
+        print(e)
         return datetime.date(2020, 1, 1)
 
 
 class Reporte:
-    def __init__ (self, date, link):
+    def __init__(self, date, link):
         self.date = date
         self.link = link
         self.csv_path = f"./casos-nuevos/{date}.csv"
         self.pdf_path = f"./pdf/{date}.pdf"
 
-    def __str__ (self):
+    def __str__(self):
         return "Informe " + str(self.date) + ", Link: " + self.link

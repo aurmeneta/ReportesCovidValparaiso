@@ -1,13 +1,13 @@
 from bs4 import BeautifulSoup
 import requests
 import datetime
-from os import path
 
 from util import string_to_datetime, Reporte
 
 START_DATE = datetime.date(2021, 2, 1)
 URL_BASE = "https://seremi5.redsalud.gob.cl"
 URL_REPORTES = "https://seremi5.redsalud.gob.cl/reporte-regional/"
+
 
 def obtener_reportes_disponibles():
     # Descargar página del SEREMI.
@@ -31,6 +31,7 @@ def obtener_reportes_disponibles():
             print(Reporte(date, link))
 
     return reportes
+
 
 if __name__ == "__main__":
     obtener_reportes_disponibles()

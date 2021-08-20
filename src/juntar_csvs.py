@@ -5,6 +5,7 @@ from os import path
 
 CSV_FILE_PATH = "./casos-nuevos/*.csv"
 
+
 def juntar_csvs():
     print("Juntanto archivos csv...")
     file_paths = glob.glob(CSV_FILE_PATH)
@@ -18,7 +19,7 @@ def juntar_csvs():
         if ((file_base == "casos-diarios.csv")
                 or (file_base == "casos-diarios_T.csv")):
             continue
-        
+
         file_name = path.splitext(file_base)[0]
         # Abrir archivo csv
         reporte_dia = pd.read_csv(file_path)
