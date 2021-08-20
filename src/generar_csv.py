@@ -1,8 +1,6 @@
 import requests
 import tabula
 import pandas as pd
-import datetime
-import glob
 from util import COMUNAS
 
 
@@ -36,13 +34,13 @@ def clean_table_1(df):
 def clean_table_2(df):
     # Guardar info de primera fila, que está guardada cómo nombre de columna
     comuna = df.columns[0]
-    casosNuevos = df.columns[1]
-    # Renombrar columnas 
+    casos_nuevos = df.columns[1]
+    # Renombrar columnas
     df = df.rename(columns={df.columns[0]: "Comuna", df.columns[1]: "Casos nuevos"})
     # Eliminar columnas y filas no pertinentes
     df = df.iloc[:-3 , 0:2]
     # Añadir comuna faltante
-    df = df.append({"Comuna": comuna, "Casos nuevos": casosNuevos}, ignore_index=True)
+    df = df.append({"Comuna": comuna, "Casos nuevos": casos_nuevos}, ignore_index=True)
     # Eliminar filas sin datos.
     df = df.dropna()
     # Eliminar columnas de provincias
@@ -51,48 +49,51 @@ def clean_table_2(df):
 
 
 def generar_csv(reporte):
-    # Descargar reporte
-    pdf = requests.get(reporte.link).content
-    pdf_file = open(reporte.pdf_path, "wb")
-    pdf_file.write(pdf)
-    pdf_file.close()
+    try:
+        # Descargar reporte
+        pdf = requests.get(reporte.link).content
+        pdf_file = open(reporte.pdf_path, "wb")
+        pdf_file.write(pdf)
+        pdf_file.close()
 
-    # Obtener tabla en primera página
-    tables = tabula.read_pdf(reporte.pdf_path, pages=1, multiple_tables=True)
-    tabla_casos_nuevos_1 = search_table_1(tables)
-    tabla_casos_nuevos_1 = clean_table_1(tabla_casos_nuevos_1)
-
-
-    # Tabla en segunda página
-    tables = tabula.read_pdf(reporte.pdf_path, pages=2, multiple_tables=True)
-    tabla_casos_nuevos_2 = tables[0]
-    tabla_casos_nuevos_2 = clean_table_2(tabla_casos_nuevos_2)
-
-    tabla_casos_nuevos = tabla_casos_nuevos_1.append(tabla_casos_nuevos_2)
-    tabla_casos_nuevos = tabla_casos_nuevos.reset_index(drop=True)
-    rows = len(tabla_casos_nuevos.index)
-
-    print(reporte.date, "analizado. Se encontraron", rows, "filas con datos.")
-
-    # Eliminar duplicados
-    casos_nuevos = []
-    for j in range(len(COMUNAS)):
-        comuna = COMUNAS[j]
-        resultados = tabla_casos_nuevos[tabla_casos_nuevos.Comuna == comuna]
-        casosNuevos = 0
-
-        for resultado in resultados["Casos nuevos"]:
-            if casosNuevos == 0:
-                casosNuevos = int(resultado)
-            elif int(resultado) < casosNuevos:
-                casosNuevos = int(resultado)
+        # Obtener tabla en primera página
+        tables = tabula.read_pdf(reporte.pdf_path, pages=1, multiple_tables=True)
+        tabla_casos_nuevos_1 = search_table_1(tables)
+        tabla_casos_nuevos_1 = clean_table_1(tabla_casos_nuevos_1)
 
 
-        casos_nuevos.append([comuna, casosNuevos])
+        # Tabla en segunda página
+        tables = tabula.read_pdf(reporte.pdf_path, pages=2, multiple_tables=True)
+        tabla_casos_nuevos_2 = tables[0]
+        tabla_casos_nuevos_2 = clean_table_2(tabla_casos_nuevos_2)
 
-    
-    casos_nuevos = pd.DataFrame(casos_nuevos, columns=["Comuna", "Casos nuevos"])
+        tabla_casos_nuevos = tabla_casos_nuevos_1.append(tabla_casos_nuevos_2)
+        tabla_casos_nuevos = tabla_casos_nuevos.reset_index(drop=True)
+        rows = len(tabla_casos_nuevos.index)
 
-    # Guardar en csv
-    # Guardar en csv
-    casos_nuevos.to_csv(reporte.csv_path, index=False)
+        print(reporte.date, "analizado. Se encontraron", rows, "filas con datos.")
+
+        # Eliminar duplicados
+        casos_nuevos = []
+        for comuna in COMUNAS:
+            resultados = tabla_casos_nuevos[tabla_casos_nuevos.Comuna == comuna]
+            casos_nuevos_comuna = 0
+
+            for resultado in resultados["Casos nuevos"]:
+                if casos_nuevos_comuna == 0:
+                    casos_nuevos_comuna = int(resultado)
+                elif int(resultado) < casos_nuevos_comuna:
+                    casos_nuevos_comuna = int(resultado)
+
+
+            casos_nuevos.append([comuna, casos_nuevos_comuna])
+
+        
+        casos_nuevos = pd.DataFrame(casos_nuevos, columns=["Comuna", "Casos nuevos"])
+
+        # Guardar en csv
+        # Guardar en csv
+        casos_nuevos.to_csv(reporte.csv_path, index=False)
+    except Exception as e:
+        print("Error al obtener el reporte",reporte)
+        print(e)
