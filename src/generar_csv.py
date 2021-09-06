@@ -1,6 +1,7 @@
 import requests
 import tabula
 import pandas as pd
+from unidecode import unidecode
 from util import COMUNAS
 
 
@@ -81,8 +82,9 @@ def generar_csv(reporte):
         # Eliminar duplicados
         casos_nuevos = []
         for comuna in COMUNAS:
-            resultados = tabla_casos_nuevos[tabla_casos_nuevos.Comuna
-                                            == comuna]
+            resultados = tabla_casos_nuevos[
+                tabla_casos_nuevos.Comuna.apply(unidecode) == unidecode(comuna)
+            ]
             casos_nuevos_comuna = 0
 
             for resultado in resultados["Casos nuevos"]:
@@ -96,7 +98,6 @@ def generar_csv(reporte):
         casos_nuevos = pd.DataFrame(casos_nuevos, columns=["Comuna",
                                                            "Casos nuevos"])
 
-        # Guardar en csv
         # Guardar en csv
         casos_nuevos.to_csv(reporte.csv_path, index=False)
     except Exception as e:
