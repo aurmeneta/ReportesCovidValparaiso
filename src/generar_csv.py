@@ -24,8 +24,7 @@ def clean_table_1(df):
     # Eliminar columnas no relevantes
     df = df.iloc[:, 0:2]
     # Renombrar columnas
-    df = df.rename(columns={df.columns[0]: "Comuna",
-                   df.columns[1]: "Casos nuevos"})
+    df = df.rename(columns={df.columns[0]: "Comuna", df.columns[1]: "Casos nuevos"})
     # Eliminar filas con datos faltantes
     df = df.dropna()
     # Eliminar columnas de provincias
@@ -38,13 +37,11 @@ def clean_table_2(df):
     comuna = df.columns[0]
     casos_nuevos = df.columns[1]
     # Renombrar columnas
-    df = df.rename(columns={df.columns[0]: "Comuna",
-                   df.columns[1]: "Casos nuevos"})
+    df = df.rename(columns={df.columns[0]: "Comuna", df.columns[1]: "Casos nuevos"})
     # Eliminar columnas y filas no pertinentes
     df = df.iloc[:-3, 0:2]
     # Añadir comuna faltante
-    df = df.append({"Comuna": comuna, "Casos nuevos": casos_nuevos},
-                   ignore_index=True)
+    df = df.append({"Comuna": comuna, "Casos nuevos": casos_nuevos}, ignore_index=True)
     # Eliminar filas sin datos.
     df = df.dropna()
     # Eliminar columnas de provincias
@@ -61,14 +58,12 @@ def generar_csv(reporte):
         pdf_file.close()
 
         # Obtener tabla en primera página
-        tables = tabula.read_pdf(reporte.pdf_path, pages=1,
-                                 multiple_tables=True)
+        tables = tabula.read_pdf(reporte.pdf_path, pages=1, multiple_tables=True)
         tabla_casos_nuevos_1 = search_table_1(tables)
         tabla_casos_nuevos_1 = clean_table_1(tabla_casos_nuevos_1)
 
         # Tabla en segunda página
-        tables = tabula.read_pdf(reporte.pdf_path, pages=2,
-                                 multiple_tables=True)
+        tables = tabula.read_pdf(reporte.pdf_path, pages=2, multiple_tables=True)
         tabla_casos_nuevos_2 = tables[0]
         tabla_casos_nuevos_2 = clean_table_2(tabla_casos_nuevos_2)
 
@@ -76,8 +71,7 @@ def generar_csv(reporte):
         tabla_casos_nuevos = tabla_casos_nuevos.reset_index(drop=True)
         rows = len(tabla_casos_nuevos.index)
 
-        print(reporte.date, "analizado. Se encontraron", rows,
-              "filas con datos.")
+        print(reporte.date, "analizado. Se encontraron", rows, "filas con datos.")
 
         # Eliminar duplicados
         casos_nuevos = []
@@ -95,8 +89,7 @@ def generar_csv(reporte):
 
             casos_nuevos.append([comuna, casos_nuevos_comuna])
 
-        casos_nuevos = pd.DataFrame(casos_nuevos, columns=["Comuna",
-                                                           "Casos nuevos"])
+        casos_nuevos = pd.DataFrame(casos_nuevos, columns=["Comuna", "Casos nuevos"])
 
         # Guardar en csv
         casos_nuevos.to_csv(reporte.csv_path, index=False)
